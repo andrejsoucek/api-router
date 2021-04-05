@@ -14,8 +14,6 @@ use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
 use Nette\DI\Definitions\Definition;
 use Nette\PhpGenerator\ClassType as GClassType;
-use Nette\Reflection\ClassType;
-use Nette\Reflection\Method;
 use Contributte\ApiRouter\ApiRoute;
 
 class ApiRouterExtension extends CompilerExtension
@@ -33,9 +31,9 @@ class ApiRouterExtension extends CompilerExtension
 	 */
 	private $reader;
 
-    /**
-     * @var Definition
-     */
+	/**
+	 * @var Definition
+	 */
 	private $definition;
 
 
@@ -110,7 +108,7 @@ class ApiRouterExtension extends CompilerExtension
 
 	private function findRoutesInPresenter(string $presenter, array &$routes): void
 	{
-		$r = ClassType::from($presenter);
+		$r = new \ReflectionClass($presenter);
 
 		$route = $this->reader->getClassAnnotation($r, ApiRoute::class);
 
@@ -166,7 +164,7 @@ class ApiRouterExtension extends CompilerExtension
 			return;
 		}
 
-		if ($method_reflection instanceof Method) {
+		if ($method_reflection instanceof \ReflectionMethod) {
 			$action_route->setDescription($method_reflection->getAnnotation('description'));
 		}
 
